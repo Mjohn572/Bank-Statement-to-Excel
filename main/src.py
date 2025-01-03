@@ -2,26 +2,31 @@ import re
 
 def clean_list(file_contents: list) -> list:
 
-    cleaned_list = []
-    for i in file_contents:
-        if "RETAIL PURCHASE" or "E-transfer" not in file_contents[i]:
-            file_contents.remove(i)
+    
+    cleaned_list = [[]] # Instantiating the final list
+
+    for i in file_contents: # Check through all contents one by one
+        if "RETAIL PURCHASE" not in file_contents[i] and "E-transfer" not in file_contents[i]:
+            continue
         else:
             # Regex to match a date at the beginning of the string (e.g., 'Nov 1', 'Dec 25', etc.)
             # and remove everything after it
             result = re.search(r'^[A-Za-z]{3} \d{1,2}', file_contents[i])
 
             # Extract the date part and store it
-            if result:
-                cleaned_list.append(result.group())
+            if result: # The First one should always return with a date
+                cleaned_list[i].append(result.group())
 
             else:
-                cleaned_list.append(cleaned_list[i-2]) # If no match, take date from previous append
+                cleaned_list[i].append(cleaned_list[-1][0]) # If no match, take date from previous append
+            
+            cleaned_list[i].append(file_contents[i+1]) # Add the next line, which is the retail place
+            
 
-            
-            cleaned_list.append(file_contents[i+1]) # Add the Reail Place
-            
-            cleaned_list.append(file_contents[i+2]) # Add the Amount
+            if "CAD" or "USD" in file_contents[i+2]: # Checking if this line is a throwaway
+                file_contents.remove(i)
+
+            cleaned_list.append(file_contents[i+2]) # Add the Amount in the line
 
     return cleaned_list
 
