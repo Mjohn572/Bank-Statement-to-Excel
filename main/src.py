@@ -70,12 +70,4 @@ def main() -> None:
 
     print(clean_list(file_contents))
 
-
-    #Create List
-    # if line has Retail Purchase OR E-Trasnfer
-    #Create list of list and append into inital list
-    # NextLine(IF line has CAD or USD)
-    #
-    #NextLine(Take the number with only 2 decimals, no rounding)
-    # if line has Deposit OR Pay
 main()
