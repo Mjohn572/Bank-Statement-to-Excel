@@ -2,6 +2,51 @@ import re
 """
 TO USE, CREATE NEW TEXT FILE, DO CTRL+SHIFT+P AND TYPE IN 'EXTRACT TEXT FROM PDF', THEN SELECT BANK STATEMENT PDF FILE
 """
+
+def write_to_categories_txt(category_database: list) -> None:
+    f
+    
+
+def category_list(cleaned_list: list) -> list:
+
+    list_w_cats = []
+
+    categories_to_write = []
+
+    categories_txt_list = read_file('categories.txt')
+
+    for i in range(len(cleaned_list)):
+
+        transaction_place = cleaned_list[i][1]
+
+        category_to_append = ""
+
+        for line in range(len(categories_txt_list)):
+
+            for item in range(len(line)):
+
+                if item in transaction_place:
+                    category_to_append = line[len(line) - 1]
+
+        if category_to_append:
+            list_w_cats.append([cleaned_list[i][0], cleaned_list[i][1], cleaned_list[i][2], category_to_append])
+
+        else: 
+
+            print("Categories: ")
+
+            for line in range(len(categories_txt_list)):
+
+                print(categories_txt_list[line][len(categories_txt_list)-1])
+
+            user_input_category = print(input("What category does this transaction belong to? "))
+
+            categories_to_write.append([cleaned_list[i][1], user_input_category])
+            
+            list_w_cats.append([cleaned_list[i][0], cleaned_list[i][1], cleaned_list[i][2], user_input_category])
+
+    return list_w_cats
+
 def clean_list(file_contents: list) -> list:
 
     
@@ -40,7 +85,6 @@ def clean_list(file_contents: list) -> list:
 
     return cleaned_list
 
-
 def read_file(file_name: str) -> list:
     """
     To read the file and return its contents
@@ -48,8 +92,12 @@ def read_file(file_name: str) -> list:
     file_open = open(file_name, "r")
     input_file = file_open.readlines()
     file_list = []
-    for line in input_file:
-        file_list.append(line.strip())
+    if "StatementText.txt" in file_name:
+        for line in input_file:
+            file_list.append(line.strip())
+    else:
+        for line in input_file:
+            file_list.append(line.strip().split(','))
     
     file_open.close()
 
